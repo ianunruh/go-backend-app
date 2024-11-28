@@ -1,0 +1,5 @@
+generator:
+  features:
+    disable:
+      # Comment out to generate client code
+      - paths/client

@@ -1,0 +1,5 @@
+Error:
+  $ref: Error.yaml
+
+HealthStatus:
+  $ref: HealthStatus.yaml

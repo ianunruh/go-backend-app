@@ -1,0 +1,19 @@
+get:
+  summary: Returns the current readiness status.
+  operationId: getHealthzReady
+
+  security: []
+
+  responses:
+    204:
+      description: Successful result.
+
+    503:
+      description: Unhealthy result.
+      content:
+        application/json:
+          schema:
+            $ref: ../schemas/HealthStatus.yaml
+
+    default:
+      $ref: ../responses/Error.yaml
