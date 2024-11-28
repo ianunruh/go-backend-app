@@ -3,7 +3,7 @@ info:
   title: Go Backend App
   version: 1.0.0
 servers:
-  - url: 'http://localhost:5080'
+  - url: 'http://localhost:9080'
 paths:
   /healthz/live:
     get:
