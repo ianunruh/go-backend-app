@@ -8,9 +8,11 @@ import (
 	sdktrace "go.opentelemetry.io/otel/sdk/trace"
 	"go.uber.org/zap"
 
+	"github.com/hibiken/asynq"
 	"github.com/ianunruh/go-backend-app/internal/config"
 	"github.com/ianunruh/go-backend-app/internal/debug"
 	"github.com/ianunruh/go-backend-app/internal/telemetry"
+	"github.com/ianunruh/go-backend-app/internal/work"
 )
 
 func NewContainer(cfg *config.Config, log *zap.Logger, logLevel zap.AtomicLevel) (*Container, error) {
@@ -39,6 +41,10 @@ func NewContainer(cfg *config.Config, log *zap.Logger, logLevel zap.AtomicLevel)
 		return nil, fmt.Errorf("starting metrics server: %w", err)
 	}
 
+	redisOpt := config.AsynqRedisClientOpt(cfg.Redis)
+
+	workQueue := work.NewQueue(redisOpt, meterProvider, tracerProvider, log)
+
 	ct := &Container{
 		Cfg:      cfg,
 		Log:      log,
@@ -49,6 +55,9 @@ func NewContainer(cfg *config.Config, log *zap.Logger, logLevel zap.AtomicLevel)
 
 		DebugServer:   debugServer,
 		MetricsServer: metricsServer,
+
+		RedisOpt:  redisOpt,
+		WorkQueue: workQueue,
 	}
 
 	return ct, nil
@@ -65,6 +74,9 @@ type Container struct {
 
 	DebugServer   *debug.Server
 	MetricsServer *telemetry.MetricsServer
+
+	RedisOpt  asynq.RedisClientOpt
+	WorkQueue work.Queue
 }
 
 func (ct *Container) Close() {

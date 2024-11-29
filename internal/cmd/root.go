@@ -19,7 +19,9 @@ func NewRootCmd() *cobra.Command {
 	flags.StringVar(&opts.ConfigPath, "config", "", "path to config")
 	flags.StringVar(&opts.LogLevel, "log-level", "", "zap log level to use")
 
+	cmd.AddCommand(NewScheduleCmd(opts))
 	cmd.AddCommand(NewServeCmd(opts))
+	cmd.AddCommand(NewWorkCmd(opts))
 
 	return cmd
 }

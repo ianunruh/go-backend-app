@@ -9,6 +9,7 @@ import (
 	"github.com/ianunruh/go-backend-app/internal/debug"
 	"github.com/ianunruh/go-backend-app/internal/server"
 	"github.com/ianunruh/go-backend-app/internal/telemetry"
+	"github.com/ianunruh/go-backend-app/internal/work"
 )
 
 type Config struct {
@@ -18,9 +19,13 @@ type Config struct {
 
 	Metrics telemetry.MetricsConfig `yaml:"metrics" envPrefix:"METRICS_"`
 
+	Redis Redis `yaml:"redis" envPrefix:"REDIS_"`
+
 	Server server.Config `yaml:"server" envPrefix:"SERVER_"`
 
 	Tracing telemetry.TracingConfig `yaml:"tracing" envPrefix:"TRACING_"`
+
+	Work work.Config `yaml:"work" envPrefix:"WORK_"`
 }
 
 func Load(path string) (*Config, error) {
