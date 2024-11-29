@@ -91,6 +91,4 @@ func (ct *Container) Close() {
 	if err := ct.DebugServer.Stop(context.Background()); err != nil {
 		ct.Log.Error("Error stopping debug server", zap.Error(err))
 	}
-
-	telemetry.SyncLog(ct.Log)
 }

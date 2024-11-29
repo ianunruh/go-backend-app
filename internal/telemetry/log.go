@@ -1,9 +1,6 @@
 package telemetry
 
 import (
-	"fmt"
-	"os"
-
 	"go.uber.org/zap"
 )
 
@@ -37,14 +34,4 @@ func newZapConfig(cfg LogConfig) zap.Config {
 		return zap.NewDevelopmentConfig()
 	}
 	return zap.NewProductionConfig()
-}
-
-func SyncLog(log *zap.Logger) {
-	if log == nil {
-		return
-	}
-
-	if err := log.Sync(); err != nil {
-		fmt.Fprintln(os.Stderr, "Failed to sync log:", err)
-	}
 }
