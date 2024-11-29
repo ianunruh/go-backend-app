@@ -11,6 +11,7 @@ import (
 
 	"github.com/ianunruh/go-backend-app/internal/generated/api"
 	"github.com/ianunruh/go-backend-app/internal/httpapi"
+	"github.com/ianunruh/go-backend-app/internal/server/requestlog"
 )
 
 func Run(
@@ -22,17 +23,20 @@ func Run(
 ) error {
 	handlers := httpapi.NewHandlers()
 
-	srv, err := api.NewServer(handlers,
+	apiSrv, err := api.NewServer(handlers,
 		api.WithMeterProvider(meterProvider),
 		api.WithTracerProvider(tracerProvider))
 	if err != nil {
 		return err
 	}
 
+	h := requestlog.Middleware(apiSrv, cfg.RequestLog, log)
+	h = tracePropagationMiddleware(h)
+
 	log.Info("Starting API server", zap.String("addr", cfg.ListenAddr))
 
 	// TODO use context
-	if err := http.ListenAndServe(cfg.ListenAddr, srv); err != nil {
+	if err := http.ListenAndServe(cfg.ListenAddr, h); err != nil {
 		if errors.Is(err, http.ErrServerClosed) {
 			return nil
 		}

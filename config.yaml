@@ -1,3 +1,7 @@
 log:
   dev: true
   dumpConfig: true
+
+server:
+  requestLog:
+    errorBody: true
